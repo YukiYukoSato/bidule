@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mini-jeux Mécanique Poids Lourd</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="brand-icon">PL</div>
+      <div>
+        <div class="brand-title">Mini-jeux Mécanique Poids Lourd</div>
+        <div class="brand-subtitle">Site de mini-jeux autour de la mécanique des poids lourds</div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
+      <div class="global-score">
+        Score global : <span id="globalScore">0</span> pts
+      </div>
+      <nav class="main-nav">
+        <button class="nav-btn active" id="navHomeBtn" type="button">Accueil</button>
+        <button class="nav-btn" id="navGamesBtn" type="button">Mini-jeux</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- PAGE ACCUEIL -->
+    <section id="homePage" class="page active">
+      <div class="hero">
+        <div>
+          <h1>Bienvenue sur le site de mini-jeux Mécanique Poids Lourd</h1>
+          <p>
+            Ce site propose des mini-jeux interactifs pour réviser la mécanique des poids lourds :
+            systèmes de freinage, moteurs diesel, transmission, diagnostic de pannes...
+          </p>
+          <p>
+            Certains jeux sont plutôt <strong>accessibles</strong> pour réviser les bases,
+            d’autres sont volontairement <strong>plus difficiles</strong> pour se challenger
+            comme en situation réelle d’atelier.
+          </p>
+
+          <div class="badge-row">
+            <span class="badge">⚙️ Mécanique PL</span>
+            <span class="badge">🔧 Diagnostic & entretien</span>
+            <span class="badge">🎮 Apprentissage par le jeu</span>
+          </div>
+
+          <p class="made-by">
+            Site réalisé par <strong>Emma</strong>
+          </p>
+        </div>
+
+        <div class="hero-side">
+          <div></div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <button class="primary-btn" type="button" id="startGamesBtn">
+              🎮 Accéder aux mini-jeux
+            </button>
+            <button class="ghost-btn" type="button" id="startQuizFromHome">
+              ⚡ Lancer directement le Quiz (difficile)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>Comment utiliser ce site ?</h3>
+        <p>
+          1. Clique sur <strong>Mini-jeux</strong> pour afficher la liste des jeux.<br>
+          2. Choisis un mini-jeu (Quiz, Diagnostic, Mémo...).<br>
+          3. La page se transforme pour n’afficher que ce jeu, avec un bouton
+          <strong>← Mini-jeux</strong> pour revenir à la liste.
+        </p>
+        <p class="muted" style="margin-top:6px;">
+          Le score global en haut à droite additionne les points gagnés dans tous les mini-jeux.
+        </p>
+      </div>
+    </section>
+
+    <!-- PAGE MINI-JEUX -->
+    <section id="gamesPage" class="page">
+      <div class="games-header">
+        <div>
+          <h2>Liste des mini-jeux</h2>
+          <p class="muted">
+            Choisis un mini-jeu. Certains sont plutôt <strong>difficiles</strong> (niveau avancé),
+            d’autres plus <strong>visuels</strong> et ludiques.
+          </p>
+        </div>
+        <button class="ghost-btn" type="button" id="resetAllBtn">Réinitialiser tous les scores</button>
+      </div>
+
+      <!-- Vue liste de jeux -->
+      <div id="gamesListView">
+        <div class="games-grid">
+          <article class="game-card">
+            <div class="game-card-title">⚡ Jeu 1 – Quiz Mécano Expert</div>
+            <p>
+              Quiz à choix multiples sur la mécanique poids lourd :
+              freinage pneumatique, injection diesel, gestion thermique...
+            </p>
+            <div class="tag-row">
+              <span class="tag tag-hard">Niveau avancé</span>
+              <span class="tag">Freinage pneumatique</span>
+              <span class="tag">Moteur diesel</span>
+            </div>
+            <button class="small-btn" type="button" data-open-game="quiz">
+              ▶ Lancer ce mini-jeu
+            </button>
+          </article>
+
+          <article class="game-card">
+            <div class="game-card-title">🧠 Jeu 2 – Diagnostic avancé</div>
+            <p>
+              Analyse de pannes complexes : combinaison de symptômes, logique de diagnostic,
+              liens entre cause mécanique et effet observé.
+            </p>
+            <div class="tag-row">
+              <span class="tag tag-hard">Très difficile</span>
+              <span class="tag">Recherche de panne</span>
+              <span class="tag">Raisonnement</span>
+            </div>
+            <button class="small-btn" type="button" data-open-game="diagnostic">
+              ▶ Lancer ce mini-jeu
+            </button>
+          </article>
+
+          
+
+          <article class="game-card">
+            <div class="game-card-title">🖼️ Jeu 3 – Mémo Images</div>
+            <p>
+              Memory visuel avec des photos de pièces de mécanique PL.
+            </p>
+            <div class="tag-row">
+              <span class="tag tag-easy">Difficulté modérée</span>
+              <span class="tag">Reconnaissance visuelle</span>
+            </div>
+            <button class="small-btn" type="button" data-open-game="memoryImages">
+              ▶ Lancer ce mini-jeu
+            </button>
+          </article>
+        </div>
+      </div>
+
+      <!-- Vue jeu en cours -->
+      <div id="gamePlayView" style="display:none;">
+        <div class="back-row">
+          <button class="ghost-btn back-btn" type="button" id="backToListBtn">
+            ← Mini-jeux
+          </button>
+          <div class="chip info" id="currentGameLabel"></div>
+        </div>
+
+        <!-- JEUX (conteneurs) -->
+
+        <!-- Jeu 1 : Quiz -->
+        <div class="game" id="game-quiz" style="display:none;">
+          <div class="status-bar">
+            <div class="chip info">⚡ Jeu 1 – Quiz Mécano Expert</div>
+            <div style="display:flex; gap:6px;">
+              <div class="chip time">⏱️ Temps : <span id="quizTimer">–</span></div>
+              <div class="chip score">Score jeu : <span id="quizScore">0</span> pts</div>
+            </div>
+          </div>
+
+          <div class="card" id="quizIntro">
+            <h3>Principe du jeu</h3>
+            <p>
+              Réponds à des questions de niveau avancé sur la mécanique poids lourd.
+              Certains items font appel à des schémas de freinage pneumatique ou à la logique d’injection diesel.
+            </p>
+            <p class="muted" style="margin-top:6px;">
+              ⏱️ Tu disposes de 40 secondes par question. Une bonne réponse vaut <strong>15 points</strong>.
+            </p>
+            <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="primary-btn" type="button" id="quizStartBtn">Commencer le quiz</button>
+              <button class="ghost-btn" type="button" id="quizRestartBtn" style="display:none;">Rejouer</button>
+            </div>
+          </div>
+
+          <div class="card" id="quizPlay" style="display:none;">
+            <div class="status-bar">
+              <div>
+                Question <span id="quizQuestionIndex">1</span>/<span id="quizTotal">–</span>
+              </div>
+              <div class="muted">
+                Score actuel : <strong id="quizScoreInline">0</strong> pts
+              </div>
+            </div>
+
+            <div id="quizQuestionText" style="font-weight:500; margin-bottom:6px;"></div>
+
+            <div class="choices" id="quizChoices"></div>
+
+            <div class="muted" id="quizFeedback"></div>
+
+            <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="small-btn" type="button" id="quizNextBtn" disabled>
+                Question suivante →
+              </button>
+            </div>
+          </div>
+
+          <div class="card" id="quizResult" style="display:none;">
+            <h3>Résultats du quiz</h3>
+            <div class="result-box" id="quizResultText"></div>
+            <p class="muted" style="margin-top:4px;">
+              Ton score a été ajouté au score global en haut de la page.
+            </p>
+          </div>
+        </div>
+
+        <!-- Jeu 2 : Diagnostic avancé -->
+        <div class="game" id="game-diagnostic" style="display:none;">
+          <div class="status-bar">
+            <div class="chip info">🧠 Jeu 2 – Diagnostic avancé</div>
+            <div style="display:flex; gap:6px;">
+              <div class="chip score">Score jeu : <span id="diagScore">0</span> pts</div>
+            </div>
+          </div>
+
+          <div class="card" id="diagIntro">
+            <h3>Principe du jeu</h3>
+            <p>
+              Tu dois interpréter des combinaisons de symptômes pour trouver la cause la plus probable.
+              Les cas sont inspirés de situations réelles sur des ensembles routiers et porteurs PL.
+            </p>
+            <p class="muted" style="margin-top:6px;">
+              Chaque bon diagnostic vaut <strong>15 points</strong>. Certaines propositions sont proches :
+              il faudra bien analyser les détails.
+            </p>
+            <div style="margin-top:10px;">
+              <button class="primary-btn" type="button" id="diagStartBtn">Lancer un diagnostic</button>
+            </div>
+          </div>
+
+          <div class="card" id="diagPlay" style="display:none;">
+            <div class="status-bar">
+              <div>
+                Cas <span id="diagIndex">1</span>/<span id="diagTotal">–</span>
+              </div>
+              <div class="muted">
+                Score actuel : <strong id="diagScoreInline">0</strong> pts
+              </div>
+            </div>
+
+            <p class="muted">Situation / Symptômes :</p>
+            <p id="diagSymptom" style="margin-bottom:6px; font-weight:500;"></p>
+
+            <p class="muted">Choisis la cause la plus cohérente :</p>
+            <div class="choices" id="diagChoices"></div>
+
+            <div id="diagFeedback" class="muted"></div>
+
+            <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="small-btn" type="button" id="diagNextBtn" disabled>
+                Cas suivant →
+              </button>
+            </div>
+          </div>
+
+          <div class="card" id="diagResult" style="display:none;">
+            <h3>Bilan des diagnostics</h3>
+            <div class="result-box" id="diagResultText"></div>
+            <p class="muted" style="margin-top:4px;">
+              Ton score a été ajouté au score global. Tu peux relancer une série de cas si tu veux.
+            </p>
+          </div>
+        </div>
+
+
+        <!-- Jeu 3 : Mémo images -->
+        <div class="game" id="game-memory-images" style="display:none;">
+          <div class="status-bar">
+            <div class="chip info">🖼️ Jeu 3 – Mémo Images</div>
+            <div class="chip score">Score jeu : <span id="memoryImgScore">0</span> pts</div>
+          </div>
+
+          <div class="card">
+            <h3>Principe du jeu</h3>
+            <p>
+              Jeu de mémoire visuel : retrouve les paires d’images de pièces de mécanique.
+            </p>
+
+            <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="primary-btn" type="button" id="memoryImgStartBtn">Lancer une partie</button>
+              <button class="ghost-btn" type="button" id="memoryImgRestartBtn" style="display:none;">Rejouer</button>
+            </div>
+          </div>
+
+          <div class="card" id="memoryImgBoardCard" style="display:none;">
+            <div class="memory-grid" id="memoryImgGrid"></div>
+            <div class="memory-stats">
+              <span>Coups : <strong id="memoryImgMoves">0</strong></span>
+              <span>Paires trouvées : <strong id="memoryImgFound">0</strong>/<span id="memoryImgTotalPairs">0</span></span>
+            </div>
+            <div class="alert" id="memoryImgMessage"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>🚛 Site de mini-jeux sur la mécanique des poids lourds.</div>
+  </footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
