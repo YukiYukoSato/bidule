@@ -1,0 +1,5 @@
+-- ADDON INFO
+Title		= Police System
+Description	= Outil complet pour la police : armurier PNJ, tablette F6, dispatch, casiers, recensement.
+Author		= YukiYukoSato
+Version		= 1.0.0
