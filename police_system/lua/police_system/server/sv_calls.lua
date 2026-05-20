@@ -59,7 +59,7 @@ net.Receive("PS_CallEnRoute", function(_, ply)
     local callId   = net.ReadUInt(32)
     local patrolId = net.ReadUInt(32)
     -- Récupère l'appel, ajoute la patrouille à la liste
-    local rows = sql.Query("SELECT * FROM ps_calls WHERE id = " .. callId)
+    local rows = sql.Query("SELECT * FROM ps_calls WHERE id = " .. sql.SQLStr(tostring(callId)))
     if not rows or not rows[1] then return end
     local call = rows[1]
     local patrols = PS.Utils.FromJSON(call.patrols)
@@ -70,7 +70,7 @@ net.Receive("PS_CallEnRoute", function(_, ply)
     PS.Calls.BroadcastCalls()
 
     -- Envoie les coords de l'appel aux membres de la patrouille
-    local patrolRows = sql.Query("SELECT * FROM ps_patrols WHERE id = " .. patrolId)
+    local patrolRows = sql.Query("SELECT * FROM ps_patrols WHERE id = " .. sql.SQLStr(tostring(patrolId)))
     if patrolRows and patrolRows[1] then
         local members = PS.Utils.FromJSON(patrolRows[1].members)
         for _, uid in ipairs(members) do

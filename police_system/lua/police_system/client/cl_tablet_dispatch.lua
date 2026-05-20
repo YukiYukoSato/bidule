@@ -68,7 +68,7 @@ function PS.TabletDispatch.Build(parent)
                 draw.SimpleText(pname, "DermaDefaultBold", 16, 10, PS.Config.Colors.Text)
                 draw.SimpleText(statusLbl, "DermaDefault", 16, 28, sc)
                 if vehicle ~= "" then
-                    draw.SimpleText("🚗 " .. vehicle, "DermaDefault", 16, 46, PS.Config.Colors.TextDim)
+                    draw.SimpleText("Vehicule: " .. vehicle, "DermaDefault", 16, 46, PS.Config.Colors.TextDim)
                 end
                 -- Membres
                 for mi, m in ipairs(membersSnap) do

@@ -55,6 +55,7 @@ local strings = {
     "PS_RecordAdd",
     "PS_RecordGet",
     "PS_RecordData",
+    "PS_RecordDelete",
 
     -- Casier agent
     "PS_AgentNoteAdd",

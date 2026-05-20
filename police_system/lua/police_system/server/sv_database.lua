@@ -185,13 +185,13 @@ function PS.DB.UpdatePatrol(id, data)
     end
     if #sets == 0 then return end
     sql.Query(string.format(
-        "UPDATE ps_patrols SET %s WHERE id = %d",
-        table.concat(sets, ", "), id
+        "UPDATE ps_patrols SET %s WHERE id = %s",
+        table.concat(sets, ", "), sql.SQLStr(tostring(id))
     ))
 end
 
 function PS.DB.DeletePatrol(id)
-    sql.Query("DELETE FROM ps_patrols WHERE id = " .. id)
+    sql.Query("DELETE FROM ps_patrols WHERE id = " .. sql.SQLStr(tostring(id)))
 end
 
 function PS.DB.GetAllPatrols()
@@ -218,7 +218,7 @@ function PS.DB.UpdateCall(id, data)
         table.insert(sets, k .. " = " .. sql.SQLStr(tostring(v)))
     end
     if #sets == 0 then return end
-    sql.Query(string.format("UPDATE ps_calls SET %s WHERE id = %d", table.concat(sets, ", "), id))
+    sql.Query(string.format("UPDATE ps_calls SET %s WHERE id = %s", table.concat(sets, ", "), sql.SQLStr(tostring(id))))
 end
 
 function PS.DB.GetActiveCalls()
@@ -251,7 +251,7 @@ function PS.DB.SearchCensus(query)
 end
 
 function PS.DB.GetCensusById(id)
-    local rows = sql.Query("SELECT * FROM ps_census WHERE id = " .. id)
+    local rows = sql.Query("SELECT * FROM ps_census WHERE id = " .. sql.SQLStr(tostring(id)))
     return rows and rows[1] or nil
 end
 
@@ -267,11 +267,11 @@ function PS.DB.AddCriminalRecord(censusId, offense, dateStr, timeStr, details, a
 end
 
 function PS.DB.GetCriminalRecords(censusId)
-    return sql.Query("SELECT * FROM ps_criminal_records WHERE census_id = " .. censusId .. " ORDER BY added_at DESC") or {}
+    return sql.Query("SELECT * FROM ps_criminal_records WHERE census_id = " .. sql.SQLStr(tostring(censusId)) .. " ORDER BY added_at DESC") or {}
 end
 
 function PS.DB.DeleteCriminalRecord(id)
-    sql.Query("DELETE FROM ps_criminal_records WHERE id = " .. id)
+    sql.Query("DELETE FROM ps_criminal_records WHERE id = " .. sql.SQLStr(tostring(id)))
 end
 
 -- -------------------------------------------------------

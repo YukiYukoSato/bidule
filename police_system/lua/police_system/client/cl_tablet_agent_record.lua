@@ -14,6 +14,12 @@ net.Receive("PS_AgentNoteData", function()
     local data = PS.Utils.FromJSON(json)
     if data.success then
         chat.AddText(Color(80,200,80), "[PS] ", Color(220,230,245), "Note ajoutée au profil de l'agent.")
+        -- Recharge les notes pour l'officier sélectionné
+        if selectedOfficer then
+            net.Start("PS_AgentNoteGet")
+                net.WriteString(selectedOfficer.steamid)
+            net.SendToServer()
+        end
         return
     end
     agentNotes = data
@@ -76,14 +82,29 @@ function PS.TabletAgentFile.Build(parent)
         end
     end
 
-    -- Charge la liste (depuis le roll-call data déjà récupéré ou via serveur)
-    if rollCallData and #rollCallData > 0 then
-        BuildOfficerList(rollCallData)
+    -- Charge la liste (depuis la tablette roll-call si disponible, sinon demande au serveur)
+    local existing = PS.Tablet and PS.Tablet.Data and PS.Tablet.Data.rollcallOfficers
+    if existing and #existing > 0 then
+        BuildOfficerList(existing)
     else
         net.Start("PS_RollCallRequest") net.SendToServer()
-        net.Receive("PS_RollCallData_AgentFile", function()
+        -- La réponse est gérée par le handler global dans cl_tablet_rollcall.lua
+        -- On reçoit PS_RollCallData et on met à jour la liste
+        local _origReceive = net.Receive
+        net.Receive("PS_RollCallData", function()
             local json = net.ReadString()
-            BuildOfficerList(PS.Utils.FromJSON(json))
+            local data = PS.Utils.FromJSON(json)
+            PS.Tablet.Data.rollcallOfficers = data
+            BuildOfficerList(data)
+            -- Restore le handler original immédiatement après
+            net.Receive("PS_RollCallData", function()
+                local j = net.ReadString()
+                local d = PS.Utils.FromJSON(j)
+                PS.Tablet.Data.rollcallOfficers = d
+                if IsValid(PS.Tablet.ContentPanel) and PS.Tablet.ActiveTab == "rollcall" then
+                    PS.Tablet.RebuildContent()
+                end
+            end)
         end)
     end
 
@@ -141,21 +162,9 @@ function PS.TabletAgentFile.Build(parent)
         end
     end
 
-    -- Re-draw quand les notes arrivent
-    local origReceive = net.Receive
-    net.Receive("PS_AgentNoteData", function()
-        local json = net.ReadString()
-        local data = PS.Utils.FromJSON(json)
-        if data.success then
-            chat.AddText(Color(80,200,80), "[PS] ", Color(220,230,245), "Note ajoutée.")
-            if selectedOfficer then
-                net.Start("PS_AgentNoteGet") net.WriteString(selectedOfficer.steamid) net.SendToServer()
-            end
-            return
-        end
-        agentNotes = data
-        RefreshNotes()
-    end)
+    -- Le handler global PS_AgentNoteData (déclaré en haut du fichier) met à jour
+    -- agentNotes et appelle RebuildContent, ce qui reconstruit cet onglet.
+    -- Pas besoin d'un second net.Receive ici.
 
     RefreshNotes()
 

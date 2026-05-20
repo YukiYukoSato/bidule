@@ -8,6 +8,18 @@
 PS = PS or {}
 PS.Distress = PS.Distress or {}
 
+-- Dessin d'un cercle via polygone (surface.DrawCircle n'existe pas dans GMod)
+local function DrawCircle(x, y, radius, segments)
+    segments = segments or 24
+    local poly = {}
+    for i = 0, segments - 1 do
+        local a = math.rad(i / segments * 360)
+        poly[i + 1] = { x = x + math.cos(a) * radius, y = y + math.sin(a) * radius }
+    end
+    draw.NoTexture()
+    surface.DrawPoly(poly)
+end
+
 -- ------- Appel de détresse -------
 
 local distressActive = false
@@ -52,7 +64,7 @@ local function DrawWorldIndicator(pos, label, color)
     -- Cercle extérieur pulsant
     local pulse = math.abs(math.sin(CurTime() * 2)) * 10
     surface.SetDrawColor(color.r, color.g, color.b, 80)
-    surface.DrawCircle(x, y, 20 + pulse, 32)
+    DrawCircle(x, y, 20 + pulse)
 
     -- Point central
     draw.RoundedBox(5, x - 7, y - 7, 14, 14, color)

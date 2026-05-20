@@ -11,6 +11,9 @@ local rollCallData = {}
 net.Receive("PS_RollCallData", function()
     local json = net.ReadString()
     rollCallData = PS.Utils.FromJSON(json)
+    -- Partage avec l'onglet agent file
+    PS.Tablet.Data = PS.Tablet.Data or {}
+    PS.Tablet.Data.rollcallOfficers = rollCallData
     if IsValid(PS.Tablet.ContentPanel) and PS.Tablet.ActiveTab == "rollcall" then
         PS.Tablet.RebuildContent()
     end

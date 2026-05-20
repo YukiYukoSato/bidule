@@ -46,18 +46,7 @@ local function ToggleTablet()
     end
 end
 
-hook.Add("PlayerBindPress", "PS_TabletKey", function(ply, bind, pressed)
-    if not pressed then return end
-    if bind == "gmod_tool" then return end  -- sécurité
-    -- Detecte la touche F6 via keyname
-    local key = input.GetKeyName(PS.Config.TabletKey)
-    if bind == string.lower(key or "") then
-        ToggleTablet()
-        return true
-    end
-end)
-
--- Binding clavier direct
+-- Binding clavier direct (Think hook — méthode fiable dans GMod)
 hook.Add("Think", "PS_TabletKeyThink", function()
     if input.IsKeyDown(PS.Config.TabletKey) and not PS.Tablet._keyHeld then
         PS.Tablet._keyHeld = true
@@ -222,12 +211,12 @@ function PS.Tablet.BuildUI()
 
     -- Barre d'onglets
     local tabs = {
-        { key = "map",        label = "🗺  Carte"      },
-        { key = "dispatch",   label = "📡  Dispatch"   },
-        { key = "census",     label = "📋  Recensement"},
-        { key = "records",    label = "🗂  Casiers"    },
-        { key = "rollcall",   label = "📞  Appel"      },
-        { key = "agentfile",  label = "👮  Profil Agent"},
+        { key = "map",        label = "Carte"       },
+        { key = "dispatch",   label = "Dispatch"    },
+        { key = "census",     label = "Recensement" },
+        { key = "records",    label = "Casiers"     },
+        { key = "rollcall",   label = "Appel"       },
+        { key = "agentfile",  label = "Profil Agent"},
     }
 
     local tabBar = vgui.Create("DPanel", frame)

@@ -124,7 +124,6 @@ net.Receive("PS_RecordDelete", function(_, ply)
     local recordId = net.ReadUInt(32)
     PS.DB.DeleteCriminalRecord(recordId)
 end)
-util.AddNetworkString("PS_RecordDelete")
 
 -- ------- Casier agent -------
 

@@ -11,7 +11,14 @@ local patrolCounters = { lincoln = 0, adam = 0, tango = 0 }
 
 -- Recharge les compteurs depuis la DB au démarrage
 hook.Add("Initialize", "PS_Dispatch_Init", function()
-    local rows = sql.Query("SELECT patrol_type, MAX(CAST(SUBSTR(patrol_name, INSTR(patrol_name,'-')+1) AS INTEGER)) as max_num FROM ps_patrols GROUP BY patrol_type") or {}
+    -- Cherche le numéro max pour chaque type de patrouille ayant un nom valide "Type-NN"
+    local rows = sql.Query([[
+        SELECT patrol_type,
+               MAX(CAST(SUBSTR(patrol_name, INSTR(patrol_name,'-')+1) AS INTEGER)) as max_num
+        FROM ps_patrols
+        WHERE INSTR(patrol_name,'-') > 0
+        GROUP BY patrol_type
+    ]]) or {}
     for _, row in ipairs(rows) do
         local t = string.lower(row.patrol_type)
         patrolCounters[t] = tonumber(row.max_num) or 0

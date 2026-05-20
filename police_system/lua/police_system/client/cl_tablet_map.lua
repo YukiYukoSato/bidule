@@ -6,6 +6,18 @@
 PS = PS or {}
 PS.TabletMap = {}
 
+-- Dessin d'un cercle via polygone (surface.DrawCircle n'existe pas dans GMod)
+local function DrawCircle(x, y, radius, segments)
+    segments = segments or 24
+    local poly = {}
+    for i = 0, segments - 1 do
+        local a = math.rad(i / segments * 360)
+        poly[i + 1] = { x = x + math.cos(a) * radius, y = y + math.sin(a) * radius }
+    end
+    draw.NoTexture()
+    surface.DrawPoly(poly)
+end
+
 -- Conversion position monde → coordonnée sur la minimap
 -- La minimap est un rectangle de dimensions (mapW x mapH) représentant
 -- les coordonnées du monde. On utilise les limites de la map via
@@ -61,7 +73,7 @@ function PS.TabletMap.Build(parent)
         local px, py = WorldToMap(myPos, 0, 0, w, h)
         -- Halo
         surface.SetDrawColor(PS.Config.Colors.Accent.r, PS.Config.Colors.Accent.g, PS.Config.Colors.Accent.b, 60)
-        surface.DrawCircle(px, py, 14, 24)
+        DrawCircle(px, py, 14)
         -- Blip joueur local (blanc)
         surface.SetDrawColor(255, 255, 255, 255)
         draw.RoundedBox(5, px - 6, py - 6, 12, 12, Color(255, 255, 255, 255))
@@ -87,7 +99,7 @@ function PS.TabletMap.Build(parent)
             local blipC = (call.call_type == "gunshot") and Color(220, 80, 80) or Color(220, 160, 30)
             draw.RoundedBox(5, cx - 6, cy - 6, 12, 12, blipC)
             surface.SetDrawColor(blipC.r, blipC.g, blipC.b, 80)
-            surface.DrawCircle(cx, cy, 14, 16)
+            DrawCircle(cx, cy, 14)
             draw.SimpleText("!", "DermaDefaultBold", cx, cy - 1, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
